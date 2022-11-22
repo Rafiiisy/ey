@@ -159,21 +159,25 @@ def pyconChat(client, username, groupname):
         elif msg == "/sendFilename" or msg == "/sendFile":
             with fileTransferCondition:
                 fileTransferCondition.notify()
-                
-        while msg == "/StartRPS":
+        elif msg == "/StartRPS":
             client.send(b"/StartRPS")
             client.recv(1024).decode("utf-8")
             cmd = 'cd /Users/rafisyafrinaldi/Desktop/multiclient && python gameServer.py'
-            p1 = subprocess.run(cmd, shell=True)
-            break
+            p1 = subprocess.Popen(cmd, shell=True)
+            p1.returncode
+#            out, err = p1.communicate()
+#            print(err)
+#            print(out)
         
-        while msg == "/PlayRPS":
+        elif msg == "/PlayRPS":
             client.send(b"/PlayRPS")
             client.recv(1024).decode("utf-8")
             cmd2 = 'cd /Users/rafisyafrinaldi/Desktop/multiclient && python gameClient.py'
-            p2 = subprocess.Popen(cmd2, shell=True)
-            break
-            
+            p2 = subprocess.Popen(cmd, shell=True)
+            p2.returncode
+#            out, err = p2.communicate()
+#            print(err)
+#            print(out)
         else:
             print("UNIDENTIFIED COMMAND:",msg)
             
