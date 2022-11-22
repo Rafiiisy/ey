@@ -36,25 +36,30 @@ def serverListen(serverSocket):
                 print(serverSocket.recv(1024).decode("utf-8"))
             else:
                 print(response)
+                
         elif msg == "/disconnect":
             serverSocket.send(bytes(".","utf-8"))
             state["alive"] = False
             break
+            
         elif msg == "/messageSend":
             serverSocket.send(bytes(state["userInput"],"utf-8"))
             state["sendMessageLock"].release()
+            
         elif msg == "/allMembers":
             serverSocket.send(bytes(".","utf-8"))
             data = pickle.loads(serverSocket.recv(1024))
             print("All Group Members:")
             for element in data:
                 print(element)
+                
         elif msg == "/onlineMembers":
             serverSocket.send(bytes(".","utf-8"))
             data = pickle.loads(serverSocket.recv(1024))
             print("Online Group Members:")
             for element in data:
                 print(element)
+                
         elif msg == "/changeAdmin":
             serverSocket.send(bytes(".","utf-8"))
             response = serverSocket.recv(1024).decode("utf-8")
@@ -68,9 +73,11 @@ def serverListen(serverSocket):
                 print(serverSocket.recv(1024).decode("utf-8"))
             else:
                 print(response)
+                
         elif msg == "/whoAdmin":
             serverSocket.send(bytes(state["groupname"],"utf-8"))
             print(serverSocket.recv(1024).decode("utf-8"))
+            
         elif msg == "/kickMember":
             serverSocket.send(bytes(".","utf-8"))
             response = serverSocket.recv(1024).decode("utf-8")
@@ -84,11 +91,13 @@ def serverListen(serverSocket):
                 print(serverSocket.recv(1024).decode("utf-8"))
             else:
                 print(response)
+                
         elif msg == "/kicked":
             state["alive"] = False
             state["inputMessage"] = False
             print("You have been kicked. Press any key to quit.")
             break
+            
         elif msg == "/fileTransfer":
             state["inputMessage"] = False
             print("Please enter the filename: ")
@@ -112,6 +121,7 @@ def serverListen(serverSocket):
                 serverSocket.send(dataLen.to_bytes(4,'big'))
                 serverSocket.send(data)
             print(serverSocket.recv(1024).decode("utf-8"))
+            
         elif msg == "/receiveFile":
             print("Receiving shared group file...")
             serverSocket.send(b"/sendFilename")
@@ -125,13 +135,18 @@ def serverListen(serverSocket):
                 f.write(data)
             f.close()
             print("Received file saved as",filename)
+            
         elif msg == "/StartRPS":
+            serverSocket.send(b"/StartRPS")
+            serverSocket.recv(1024).decode("utf-8")
             cmd = 'cd /Users/rafisyafrinaldi/Desktop/multiclient && python gameServer.py'
             p1 = subprocess.run(cmd, shell=True)
             p1.returncode
           
         
         elif msg == "/PlayRPS":
+            serverSocket.send(b"/StartRPS")
+            serverSocket.recv(1024).decode("utf-8")
             cmd2 = 'cd /Users/rafisyafrinaldi/Desktop/multiclient && python gameClient.py'
             p2 = subprocess.run(cmd2, shell=True)
             p2.returncode
